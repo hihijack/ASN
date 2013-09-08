@@ -1,0 +1,35 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Sprites\BtnHandler.cs">
+    <Files>
+      <File FileName="Assets\Sprites\BtnHandler.cs" Line="13" Column="17" />
+      <File FileName="Assets\Sprites\Hero.cs" Line="233" Column="3" />
+      <File FileName="Assets\Sprites\IPath.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\IActor.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\IGame.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\IConst.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\Tools.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\GameView.cs" Line="66" Column="2" />
+      <File FileName="Assets\Sprites\FSM\IActorState.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\CameraControll.cs" Line="29" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Assembly-CSharp" expanded="True">
+            <Node name="Assets" expanded="True">
+              <Node name="Sprites" expanded="True">
+                <Node name="FSM" expanded="True" />
+                <Node name="BtnHandler.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

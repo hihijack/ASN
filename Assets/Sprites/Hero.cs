@@ -56,6 +56,17 @@ public class Hero : IActor
 	void OnGUI(){
 	}
 	
+	#region FSM Handler
+	public override void OnEnterCatchPoint ()
+	{
+		
+	}
+	
+	public override void DoUpdateCatchPoint ()
+	{
+		
+	}
+	
 	public override void DoUpdateIdle ()
 	{
 		moveDir.y = -0.1f;
@@ -83,9 +94,24 @@ public class Hero : IActor
 	public override void DoUpdateShin ()
 	{
 		moveDir.y = axisV * shinSpeed * Time.deltaTime;
+		
+		GameObject curShinGObj = GetCurTouchGameObject(axisHCancelShin < 0);
+		if(curShinGObj != null){
+			if(curShinGObj.name.Equals("Box_Up") && axisV > 0){
+				moveDir.y = 0;
+			}else if(curShinGObj.name.Equals("Box_Down") && axisV < 0){
+				moveDir.y = 0;
+			}
+		}
+		
 		cc.Move(moveDir);
+		
 		if(axisH == axisHCancelShin){
 			updataState(new IActorAction(EFSMAction.HERO_ONAIR_DOWN));
+		}
+		
+		if(btnA > 0){
+			updataState(new IActorAction(EFSMAction.HERO_ONAIR_UP));
 		}
 	}
 	
@@ -180,6 +206,8 @@ public class Hero : IActor
 //		}
 	}
 	
+	#endregion
+	
 	public void SetFace(bool isRigth){
 		if(isRigth && ani_sprite.scale.x < 0){
 			ani_sprite.FlipX();
@@ -202,6 +230,30 @@ public class Hero : IActor
 			gobjR = hits[0].transform.gameObject;
 		}else{
 //			Debug.LogError("hits.Length != 2" + hits.Length);
+		}
+		return gobjR;
+	}
+	/// <summary>
+	/// Gets the current touch game object.
+	/// </summary>
+	/// <returns>
+	/// The current touch game object.
+	/// </returns>
+	/// <param name='isRight'>
+	/// the dir that hero  to  other obj
+	/// </param>
+	public GameObject GetCurTouchGameObject(bool isRight){
+		GameObject gobjR = null;
+		RaycastHit hit;
+		Vector3 posOri = transform.position;
+		Vector3 direction;
+		if(isRight){
+			direction = Vector3.right;
+		}else{
+			direction =Vector3.left;
+		}
+		if(Physics.Raycast(posOri, direction, out hit, 0.5f)){
+			gobjR = hit.transform.gameObject;
 		}
 		return gobjR;
 	}
@@ -266,11 +318,16 @@ public class Hero : IActor
 	
 	void OnTriggerEnter(Collider other){
 		GameObject gobjOther = other.gameObject;
+		if(gobjOther.CompareTag("catchpoint") && axisV > 0){
+			updataState(new IActorAction(EFSMAction.HERO_CATCHPOINT));
+		}
 	}
 
 	
 	void Killed(){
 		
 	}
+	
+//	public GameObject GetCur
 	
 }

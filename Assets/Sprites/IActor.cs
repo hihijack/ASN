@@ -116,4 +116,7 @@ public class IActor : MonoBehaviour{
 
 	public virtual void OnEnterShin(){}
 	public virtual void DoUpdateShin(){}
+	
+	public virtual void OnEnterCatchPoint(){}
+	public virtual void DoUpdateCatchPoint(){}
 }

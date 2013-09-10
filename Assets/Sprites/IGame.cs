@@ -29,7 +29,8 @@ public enum EFSMAction {
 	HERO_RUN,
 	HERO_ONAIR_DOWN,
 	HERO_ONAIR_UP,
-	HERO_SHIN
+	HERO_SHIN,
+	HERO_CATCHPOINT
 }
 
 public enum ERuneStoneType{

@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class IActor : MonoBehaviour{
 	public int id;
@@ -8,19 +8,28 @@ public class IActor : MonoBehaviour{
 	public IActorState state;
 	public IActorAction action;
 	public tk2dAnimatedSprite ani_sprite;
-
+	
+	
+	public void SetFace(bool isRigth){
+		if(isRigth && ani_sprite.scale.x < 0){
+			ani_sprite.FlipX();
+		}else if(!isRigth && ani_sprite.scale.x > 0){
+			ani_sprite.FlipX();
+		}
+	}
+	
 	public Vector2 GetWorldPos(){
 		if(gameObject != null){
 			float x = gameObject.transform.position.x;
 			float y = gameObject.transform.position.y;
-			Bounds bounds = gameObject.renderer.bounds;
-			if(ani_sprite.scale.x > 0){
-				x += bounds.size.x / 2;
-			}else{
-				x -= bounds.size.x / 2;
-			}
-			
-			y += bounds.size.y / 2;
+//			Bounds bounds = gameObject.renderer.bounds;
+//			if(ani_sprite.scale.x > 0){
+//				x += bounds.size.x / 2;
+//			}else{
+//				x -= bounds.size.x / 2;
+//			}
+//			
+//			y += bounds.size.y / 2;
 				
 			Vector2 v2Pos = new Vector2(x, y);
 			return v2Pos;
@@ -58,7 +67,7 @@ public class IActor : MonoBehaviour{
 	}
 
     public void updataState(IActorAction action) {
-        if(action.actiontype != EFSMAction.NONE){
+        if(action.actiontype != EActorAction.NONE){
 //            Debug.Log("updataState - " + this.state + " by action:" + action.actiontype);//########
             IActorState asCur = this.state;
             IActorState asNext = asCur.toNextState(action.actiontype);
@@ -78,10 +87,6 @@ public class IActor : MonoBehaviour{
     public bool IsInState(System.Type type) {
         return state.GetType() == type;
     }
-	
-	public virtual void DoUpdateAttack() {
-       
-    }
 
     public virtual void DoUpdateIdle() { }
 	
@@ -91,10 +96,6 @@ public class IActor : MonoBehaviour{
 	public virtual void DoUpdateRun(){}
 	
 	public virtual void OnEnterRun(){}
-	
-	public virtual void OnEnterAttack(){}
-	
-	public virtual void OnEnterUnAttack(){}
 	
 	public virtual void OnEnterIdle(){}
 	
@@ -119,4 +120,22 @@ public class IActor : MonoBehaviour{
 	
 	public virtual void OnEnterCatchPoint(){}
 	public virtual void DoUpdateCatchPoint(){}
+	
+	
+	public virtual void OnEnterAttack(){}
+	public virtual void DoUpdataAttack(){}
+	
+	#region NPCFunc
+	public virtual void OnEnterNPCIdle(){}
+	public virtual void DoUpdataNPCIdle(){}
+	
+	public virtual void OnEnterWalk(){}
+	public virtual void DoUpdataNPCWalk(){}
+	
+	public virtual void OnEnterDie(){}
+	public virtual void DoUpdataDie(){}
+	
+	public virtual void OnEnterWarn(){}
+	public virtual void DoUpdataWarn(){}
+	#endregion
 }

@@ -8,5 +8,6 @@ public static class IPath
 	public const string Path_MainHead = "Preafabs/mainhead/";
 	public const string Path_AniEffect = "Preafabs/Effect/AniEffect";
 	public const string Path_Items = "Preafabs/Items/";
+	public const string Path_Effects = "Preafabs/Effects/";
 }
 

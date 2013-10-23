@@ -17,20 +17,19 @@ public enum EActorState{
     STATE_ATTACKINTERVAL
 }
 
-public enum EFSMAction {
+public enum EActorAction {
     NONE,
-    MOVE,
-    ATTACK_PLAYER,
-    IDLE,
-	UNATTACK,
-	UNATTACK_BY_FLASH,
-    ATTACK_INTERVAL,
 	HERO_IDLE,
 	HERO_RUN,
 	HERO_ONAIR_DOWN,
 	HERO_ONAIR_UP,
 	HERO_SHIN,
-	HERO_CATCHPOINT
+	HERO_CATCHPOINT,
+	HERO_ATTACK,
+	NPC_IDLE,
+	NPC_WALK,
+	NPC_WARN,
+	NPC_DIE
 }
 
 public enum ERuneStoneType{
@@ -41,4 +40,10 @@ public enum ERuneStoneType{
 public enum EActorType{
 	Gard,
 	Hero
+}
+
+public enum EAIAction{
+	MoveBy,
+	Stop,
+	Turn
 }

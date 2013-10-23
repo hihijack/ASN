@@ -24,9 +24,7 @@ public class CameraControll : MonoBehaviour {
 	void Update () {
 		float x = target.transform.position.x;
 		float y = target.transform.position.y;
-		float z = target.transform.position.z;
-		float xSelf = transform.position.x;
-		float ySelf = transform.position.y;
+		
 		float zSelf = transform.position.z;
 		
 		// look up

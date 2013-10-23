@@ -21,8 +21,20 @@ public class GameView : MonoBehaviour
 	public EGameState gameState;
 	
 	public Camera main_camera;
+	
+	private IActor[] g_Enemys;
+	
+	public GameObject gobjUIPanle;
+	
+	private UILabel txtTip;
+	
+	void Awake(){
+		InitNPCAI();
+	}
+	
 	void Start ()
 	{
+		txtTip = Tools.GetComponentInChildByPath<UILabel>(gobjUIPanle, "LabelTip");
 	}
 	
 	// Update is called once per frame
@@ -112,5 +124,55 @@ public class GameView : MonoBehaviour
 	
 	public bool IsInGameState(EGameState gameState){
 		return this.gameState == gameState;
+	}
+	
+	public void InitNPCAI(){
+		
+		RegisterAllEnemys();
+		
+		
+		
+		Enemy enemy001 = GetEnemyByName("Enemy_Gard_001");
+		enemy001.InitAIActions(new AIMoveBy(1.28f), new AIStop(3f), new AITurn(), new AIMoveBy(-1.28f), new AIStop(3f), new AITurn());
+		
+		Enemy enemy002 = GetEnemyByName("Enemy_Gard_002");
+		enemy002.InitAIActions(new AIMoveBy(1.44f), new AIStop(1.5f), new AITurn(), new AIMoveBy(-1.44f), new AIStop(1.5f), new AITurn());
+		
+		Enemy enemy003 = GetEnemyByName("Enemy_Gard_003");
+		enemy003.InitAIActions(new AIMoveBy(1.12f), new AIStop(2f), new AITurn(), new AIMoveBy(-1.12f), new AIStop(2f), new AITurn());
+		
+		Enemy enemy004 = GetEnemyByName("Enemy_Gard_004");
+		enemy004.InitAIActions(new AIMoveBy(1f), new AIStop(2f), new AITurn(), new AIMoveBy(-1), new AIStop(2f), new AITurn());
+		
+		Enemy enemyTarget = GetEnemyByName("Enemy_Target_005");
+		
+	}
+	
+	public IActor[] GetEnemys(){
+		return g_Enemys;
+	}
+	
+	public Enemy GetEnemyByName(string gobjName){
+		Enemy r = null;
+		GameObject gobjEnemy = GameObject.Find(gobjName);
+		if(gobjEnemy != null){
+			r = gobjEnemy.GetComponent<Enemy>();
+		}
+		return r;
+	}
+	
+	public void RegisterAllEnemys(){
+		GameObject[] gobjEnemys = GameObject.FindGameObjectsWithTag("enemy");
+		int count = gobjEnemys.Length;
+		g_Enemys = new Enemy[count];
+		for (int i = 0; i < gobjEnemys.Length; i++) {
+			GameObject gobjEnemy = gobjEnemys[i];
+			Enemy enemy = gobjEnemy.GetComponent<Enemy>();
+			g_Enemys[i] = enemy;
+		}
+	}
+	
+	public void FailGame(){
+		NGUITools.SetActiveSelf(txtTip.gameObject, true);
 	}
 }

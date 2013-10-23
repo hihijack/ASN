@@ -1,14 +1,23 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Sprites\Hero.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Sprites\Enemy.cs">
     <Files>
-      <File FileName="Assets\Sprites\GameView.cs" Line="26" Column="3" />
-      <File FileName="Assets\Sprites\Hero.cs" Line="67" Column="3" />
+      <File FileName="Assets\Sprites\GameView.cs" Line="37" Column="1" />
+      <File FileName="Assets\Sprites\Hero.cs" Line="46" Column="1" />
       <File FileName="Assets\Sprites\Tools.cs" Line="1" Column="1" />
       <File FileName="Assets\Sprites\FSM\IActorAction.cs" Line="1" Column="1" />
-      <File FileName="Assets\Sprites\FSM\IActorState.cs" Line="278" Column="1" />
+      <File FileName="Assets\Sprites\FSM\IActorState.cs" Line="1" Column="1" />
       <File FileName="Assets\Sprites\IGame.cs" Line="1" Column="1" />
-      <File FileName="Assets\Sprites\IActor.cs" Line="121" Column="43" />
+      <File FileName="Assets\Sprites\Enemy.cs" Line="121" Column="50" />
+      <File FileName="Assets\Sprites\IAIAction.cs" Line="5" Column="19" />
+      <File FileName="Assets\VirtualControls\NGUI\Scripts\UI\UIPanel.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\AIMoveBy.cs" Line="8" Column="33" />
+      <File FileName="Assets\Sprites\AIStop.cs" Line="8" Column="32" />
+      <File FileName="Assets\NGUI\Scripts\Editor\UICreateWidgetWizard.cs" Line="1" Column="1" />
+      <File FileName="Assets\NGUI\Scripts\Editor\NGUIMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\IActor.cs" Line="1" Column="1" />
+      <File FileName="Assets\TK2DROOT\tk2d\Code\Sprites\tk2dAnimatedSprite.cs" Line="1" Column="1" />
+      <File FileName="Assets\Sprites\IPath.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

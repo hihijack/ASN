@@ -33,6 +33,10 @@ public class Hero : IActor
 	
 	private int axisHCancelShin;
 	
+	public float killRange;
+	
+	private Enemy curFacous;
+	
 	void Start(){
 		isEnermy = false;
 		actor_type = EActorType.Hero;
@@ -49,6 +53,9 @@ public class Hero : IActor
 		btnB = gameView.VCInput_BtnB;
 		moveDir.x = 0f;
 		this.state.DoUpdata();
+		
+		CheckEnemyInRange(killRange);
+		
 		gameView.VCInput_BtnA = 0;
 		gameView.VCInput_BtnB = 0;
 	}
@@ -57,14 +64,29 @@ public class Hero : IActor
 	}
 	
 	#region FSM Handler
+	public override void OnEnterAttack ()
+	{
+		transform.position = curFacous.transform.position;
+		Kill(curFacous);
+	}
+	
+	public override void DoUpdataAttack ()
+	{
+		updataState(new IActorAction(EActorAction.HERO_IDLE));
+	}
+	
 	public override void OnEnterCatchPoint ()
 	{
-		
+		ani_sprite.Play("idle");
 	}
 	
 	public override void DoUpdateCatchPoint ()
 	{
-		
+		if(btnA > 0){
+			updataState(new IActorAction(EActorAction.HERO_ONAIR_UP));
+		}else if(axisV < 0){
+		    updataState(new IActorAction(EActorAction.HERO_ONAIR_DOWN));
+		}
 	}
 	
 	public override void DoUpdateIdle ()
@@ -72,15 +94,17 @@ public class Hero : IActor
 		moveDir.y = -0.1f;
 		cc.SimpleMove(moveDir);
 		if(!cc.isGrounded){
-			updataState(new IActorAction(EFSMAction.HERO_ONAIR_DOWN));
+			updataState(new IActorAction(EActorAction.HERO_ONAIR_DOWN));
 		}else{
 			
 			if(gameView.IsInGameState(EGameState.Running)){
 			
 				if(axisH != 0){
-					updataState(new IActorAction(EFSMAction.HERO_RUN));
+					updataState(new IActorAction(EActorAction.HERO_RUN));
 				}else if(btnA > 0){
-					updataState(new IActorAction(EFSMAction.HERO_ONAIR_UP));
+					updataState(new IActorAction(EActorAction.HERO_ONAIR_UP));
+				}else if(btnB > 0 && curFacous != null){
+					updataState(new IActorAction(EActorAction.HERO_ATTACK));
 				}
 			}
 		}
@@ -107,11 +131,11 @@ public class Hero : IActor
 		cc.Move(moveDir);
 		
 		if(axisH == axisHCancelShin){
-			updataState(new IActorAction(EFSMAction.HERO_ONAIR_DOWN));
+			updataState(new IActorAction(EActorAction.HERO_ONAIR_DOWN));
 		}
 		
 		if(btnA > 0){
-			updataState(new IActorAction(EFSMAction.HERO_ONAIR_UP));
+			updataState(new IActorAction(EActorAction.HERO_ONAIR_UP));
 		}
 	}
 	
@@ -127,14 +151,18 @@ public class Hero : IActor
 					SetFace(false);
 				}
 			}else{
-				updataState(new IActorAction(EFSMAction.HERO_IDLE));
+				updataState(new IActorAction(EActorAction.HERO_IDLE));
 			}
 			
 			if(btnA > 0){
-				updataState(new IActorAction(EFSMAction.HERO_ONAIR_UP));
-			}	
+				updataState(new IActorAction(EActorAction.HERO_ONAIR_UP));
+			}
+			
+			if(btnB > 0 && curFacous != null){
+				updataState(new IActorAction(EActorAction.HERO_ATTACK));
+			}
 		}else{
-			updataState(new IActorAction(EFSMAction.HERO_ONAIR_DOWN));
+			updataState(new IActorAction(EActorAction.HERO_ONAIR_DOWN));
 		}
 		
 	}
@@ -167,7 +195,11 @@ public class Hero : IActor
 		}
 		cc.Move(moveDir * Time.deltaTime);
 		if(cc.isGrounded){
-			updataState(new IActorAction(EFSMAction.HERO_IDLE));
+			updataState(new IActorAction(EActorAction.HERO_IDLE));
+		}
+		
+		if(btnB > 0 && curFacous != null){
+			updataState(new IActorAction(EActorAction.HERO_ATTACK));
 		}
 		
 //		if(btnA > 0){
@@ -198,9 +230,14 @@ public class Hero : IActor
 		if(moveDir.y > 0){
 			cc.Move(moveDir * Time.deltaTime);
 		}else{
-			updataState(new IActorAction(EFSMAction.HERO_ONAIR_DOWN));
+			updataState(new IActorAction(EActorAction.HERO_ONAIR_DOWN));
 		}
 //		
+		
+		if(btnB > 0 && curFacous != null){
+			updataState(new IActorAction(EActorAction.HERO_ATTACK));	
+		}
+		
 //		if(btnA > 0){
 //			updataState(new IActorAction(EFSMAction.HERO_ONAIR_UP));
 //		}
@@ -208,13 +245,7 @@ public class Hero : IActor
 	
 	#endregion
 	
-	public void SetFace(bool isRigth){
-		if(isRigth && ani_sprite.scale.x < 0){
-			ani_sprite.FlipX();
-		}else if(!isRigth && ani_sprite.scale.x > 0){
-			ani_sprite.FlipX();
-		}
-	}
+
 	
 	public bool IsHitSomeThing(){
 		return false;
@@ -262,18 +293,6 @@ public class Hero : IActor
 		return g_gobjCurStepOn;
 	}
 	#region Game Mehtods
-	public void OnClockAniEnd(){
-		g_Clock_Times++;
-		if(g_Clock_Times == 3){
-			GameObject gobjClock = GameObject.Find("clock");
-			GameObject gobjLockRune_1_Lock = GameObject.Find("LockRune_1_Lock");
-			gobjLockRune_1_Lock.name = "LockRune_1_UnLock";
-			Tools.SetGameObjMaterial(gobjLockRune_1_Lock, "rune_norm");
-			BoxCollider coll = Tools.GetComponentInChildByPath<BoxCollider>(gobjClock, "clock_active");
-			Destroy(coll);
-		}
-	}
-	
 	public void InteractiveHandle(){
 		if(btnB > 0 && gameView.IsInGameState(EGameState.Running)){
 			GameObject gobjInteractive =  GetCurBGGameObject();
@@ -310,7 +329,7 @@ public class Hero : IActor
 		if(hit.gameObject.CompareTag("shinable")){
 			
 			if(Tools.IsInTheRight(gameObject, hit.gameObject)? (axisH < 0) : (axisH > 0)){
-				updataState(new IActorAction(EFSMAction.HERO_SHIN));
+				updataState(new IActorAction(EActorAction.HERO_SHIN));
 				axisHCancelShin = -1 * axisH;
 			}
 		}
@@ -319,7 +338,7 @@ public class Hero : IActor
 	void OnTriggerEnter(Collider other){
 		GameObject gobjOther = other.gameObject;
 		if(gobjOther.CompareTag("catchpoint") && axisV > 0){
-			updataState(new IActorAction(EFSMAction.HERO_CATCHPOINT));
+			updataState(new IActorAction(EActorAction.HERO_CATCHPOINT));
 		}
 	}
 
@@ -328,6 +347,54 @@ public class Hero : IActor
 		
 	}
 	
-//	public GameObject GetCur
+	
+	void CheckEnemyInRange(float range){
+		IActor[] enemys = gameView.GetEnemys(); 
+		int enemyCount = enemys.Length;
+		for (int i = 0; i < enemyCount; i++) {
+			Enemy enemy = enemys[i] as Enemy;
+			if(enemy != null){
+				float distance = GetActorDistance(enemy);
+				if(distance <= range){
+					FocusEnemy(enemy);
+				}else{
+					CancelFocusEnemy(enemy);
+				}
+			}
+		}
+	}
+	
+	void FocusEnemy(Enemy enemy){
+		if(!enemy.IsFocused()){
+			enemy.SetIsFocused(true);
+			curFacous = enemy;
+			GameObject gobjMark = Tools.GetGameObjectInChildByPathSimple(enemy.gameObject, "KillMark");
+			if(gobjMark == null){
+				gobjMark = Tools.LoadResourcesGameObject(IPath.Path_Effects + "KillMark", enemy.gameObject);
+				gobjMark.transform.localPosition = new Vector3(0f, 0.41f, 0f);
+				gobjMark.name = "KillMark";
+			}else{
+				gobjMark.SetActive(true);
+			}
+		}
+	}
+	
+	void CancelFocusEnemy(Enemy enemy){
+		if(enemy.IsFocused()){
+			enemy.SetIsFocused(false);
+			curFacous = null;
+			GameObject gobjMark = Tools.GetGameObjectInChildByPathSimple(enemy.gameObject, "KillMark");
+			gobjMark.SetActive(false);
+		}
+		
+	}
+	
+	bool HasFocus(){
+		return curFacous != null;
+	}
+	
+	void Kill(Enemy enemy){
+		enemy.updataState(new IActorAction(EActorAction.NPC_DIE));
+	}
 	
 }

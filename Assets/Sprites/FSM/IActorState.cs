@@ -5,137 +5,31 @@ public class IActorState{
     public IActor actor;
     public float time;
     public IActorState() {}
-    public virtual IActorState toNextState(EFSMAction action) { return null; }
+    public virtual IActorState toNextState(EActorAction action) { return null; }
+	/// <summary>
+	/// Raises the enter event.call at the frame that to call updataState
+	/// </summary>
     public virtual void OnEnter() { }
     public virtual void DoUpdata() { }
 }
 
-
-
-//public class ActorState_Move : IActorState {
-//    public ActorState_Move(IActor actor)
-//    {
-//        this.actor = actor;
-//    }
-//
-//    public override IActorState toNextState(EFSMAction action)
-//    {
-//        IActorState result = null;
-//        if(action == EFSMAction.ATTACK_PLAYER){
-//            result = new ActorState_AttackPlayer(actor);
-//        }else if(action == EFSMAction.UNATTACK){
-//			result = new ActorState_UnAttack(actor);
-//		}else if(action == EFSMAction.UNATTACK_BY_FLASH){
-//			result = new ActorState_UnAttack_By_Flash(actor);
-//		}
-//        return result;
-//    }
-//
-//    public override void OnEnter()
-//    {
-//        
-//    }
-//
-//    public override void DoUpdata()
-//    {
-//        actor.DoUpdateMove();
-//    }
-//}
-//
-//public class ActorState_AttackPlayer : IActorState{
-//    public ActorState_AttackPlayer(IActor actor)
-//    {
-//        this.actor = actor;
-//    }
-//
-//    public override IActorState toNextState(EFSMAction action)
-//    {
-//       IActorState result = null;
-//        if(action == EFSMAction.IDLE){
-//            result = new ActorState_Idle(actor);
-//        }
-//        return result;
-//    }
-//
-//    public override void OnEnter()
-//    {
-//       actor.OnEnterAttack();
-//    }
-//
-//    public override void DoUpdata()
-//    {
-////        time += Time.deltaTime;
-////        enermy.DoUpdateAttack();
-//    }
-//}
-//
-//public class ActorState_Idle : IActorState {
-//    public ActorState_Idle(IActor actor)
-//    {
-//        this.actor = actor;
-//    }
-//
-//    public override IActorState toNextState(EFSMAction action)
-//    {
-//        IActorState result = null;
-//        if(action == EFSMAction.MOVE){
-////            result = new ActorState_Move(actor);
-//        }
-//        return result;
-//    }
-//
-//    public override void DoUpdata()
-//    {
-//        actor.DoUpdateIdle();
-//    }
-//	
-//	public override void OnEnter ()
-//	{
-//		actor.OnEnterIdle();
-//	}
-//}
-//
-//public class HeroActorState_Flash : IActorState{
-//	public HeroActorState_Flash(IActor actor){
-//		this.actor = actor;
-//	}
-//	
-//	public override IActorState toNextState (EFSMAction action)
-//	{
-//		IActorState result = null;
-//		if(action == EFSMAction.HERO_IDLE){
-//			result = new HeroActorState_Idle(actor);
-//		}else if(action == EFSMAction.HERO_FLASH_ATTACK){
-//			result = new HeroActorState_Flash_Attack(actor);
-//		}
-//		return result;
-//	}
-//	
-//	public override void OnEnter ()
-//	{
-//		actor.OnEnterHeroFlash();
-//	}
-//	
-//	public override void DoUpdata ()
-//	{
-//		actor.DoUpdateHeroFlash();
-//	}
-//}
-//
+#region HeroFSM
 public class HeroActorState_Idle : IActorState{
 	public HeroActorState_Idle(IActor actor){
 		this.actor = actor;
 	}
 	
-	public override IActorState toNextState (EFSMAction action)
+	public override IActorState toNextState (EActorAction action)
 	{
 		IActorState result = null;
-		if(action == EFSMAction.HERO_RUN){
+		if(action == EActorAction.HERO_RUN){
 			result = new HeroActorState_Run(actor);
-		}else if(action == EFSMAction.HERO_ONAIR_DOWN){
+		}else if(action == EActorAction.HERO_ONAIR_DOWN){
 			result = new HeroActorState_OnAir_Down(actor);
-		}else if(action == EFSMAction.HERO_ONAIR_UP){
+		}else if(action == EActorAction.HERO_ONAIR_UP){
 			result = new HeroActorState_OnAir_Up(actor);
+		}else if(action == EActorAction.HERO_ATTACK){
+			result = new HeroActorState_Attack(actor);
 		}
 		return result;
 	}
@@ -157,18 +51,20 @@ public class HeroActorState_OnAir_Up : IActorState{
 		this.actor = actor;
 	}
 	
-	public override IActorState toNextState (EFSMAction action)
+	public override IActorState toNextState (EActorAction action)
 	{
 		IActorState result = null;
-		if(action == EFSMAction.HERO_ONAIR_DOWN){
+		if(action == EActorAction.HERO_ONAIR_DOWN){
 			result = new HeroActorState_OnAir_Down(actor);
 		}
-		else if(action == EFSMAction.HERO_ONAIR_UP){
+		else if(action == EActorAction.HERO_ONAIR_UP){
 			result = new HeroActorState_OnAir_Up(actor);
-		}else if(action == EFSMAction.HERO_SHIN){
+		}else if(action == EActorAction.HERO_SHIN){
 			result = new HeroActorState_Shin(actor);
-		}else if(action == EFSMAction.HERO_CATCHPOINT){
+		}else if(action == EActorAction.HERO_CATCHPOINT){
 			result = new HeroActorState_CatchPoint(actor);
+		}else if(action == EActorAction.HERO_ATTACK){
+			result = new HeroActorState_Attack(actor);
 		}
 		return result;
 	}
@@ -189,15 +85,17 @@ public class HeroActorState_Run : IActorState{
 		this.actor = actor;
 	}
 	
-	public override IActorState toNextState (EFSMAction action)
+	public override IActorState toNextState (EActorAction action)
 	{
 		IActorState result = null;
-		if(action == EFSMAction.HERO_IDLE){
+		if(action == EActorAction.HERO_IDLE){
 			result = new HeroActorState_Idle(actor);
-		}else if(action == EFSMAction.HERO_ONAIR_UP){
+		}else if(action == EActorAction.HERO_ONAIR_UP){
 			result = new HeroActorState_OnAir_Up(actor);
-		}else if(action == EFSMAction.HERO_ONAIR_DOWN){
+		}else if(action == EActorAction.HERO_ONAIR_DOWN){
 			result = new HeroActorState_OnAir_Down(actor);
+		}else if(action == EActorAction.HERO_ATTACK){
+			result = new HeroActorState_Attack(actor);
 		}
 		return result;
 	}
@@ -218,18 +116,20 @@ public class HeroActorState_OnAir_Down : IActorState{
 		this.actor = actor;
 	}
 	
-	public override IActorState toNextState (EFSMAction action)
+	public override IActorState toNextState (EActorAction action)
 	{
 		IActorState result = null;
-		if(action == EFSMAction.HERO_IDLE){
+		if(action == EActorAction.HERO_IDLE){
 			result = new HeroActorState_Idle(actor);
 		}
-		else if(action == EFSMAction.HERO_ONAIR_UP){
+		else if(action == EActorAction.HERO_ONAIR_UP){
 			result = new HeroActorState_OnAir_Up(actor);
-		}else if(action == EFSMAction.HERO_SHIN){
+		}else if(action == EActorAction.HERO_SHIN){
 			result = new HeroActorState_Shin(actor);
-		}else if(action == EFSMAction.HERO_CATCHPOINT){
+		}else if(action == EActorAction.HERO_CATCHPOINT){
 			result = new HeroActorState_CatchPoint(actor);
+		}else if(action == EActorAction.HERO_ATTACK){
+			result = new HeroActorState_Attack(actor);
 		}
 		return result;
 	}
@@ -250,12 +150,12 @@ public class HeroActorState_Shin : IActorState{
 		this.actor = actor;
 	}
 	
-	public override IActorState toNextState (EFSMAction action)
+	public override IActorState toNextState (EActorAction action)
 	{
 		IActorState result = null;
-		if(action == EFSMAction.HERO_ONAIR_DOWN){
+		if(action == EActorAction.HERO_ONAIR_DOWN){
 			result = new HeroActorState_OnAir_Down(actor);
-		}else if(action == EFSMAction.HERO_ONAIR_UP){
+		}else if(action == EActorAction.HERO_ONAIR_UP){
 			result = new HeroActorState_OnAir_Up(actor);
 		}
 		return result;
@@ -277,9 +177,14 @@ public class HeroActorState_CatchPoint : IActorState{
 		this.actor = actor;
 	}
 	
-	public override IActorState toNextState (EFSMAction action)
+	public override IActorState toNextState (EActorAction action)
 	{
 		IActorState result = null;
+		if(action == EActorAction.HERO_ONAIR_UP){
+			result = new HeroActorState_OnAir_Up(actor);
+		}else if(action == EActorAction.HERO_ONAIR_DOWN){
+			result = new HeroActorState_OnAir_Down(actor);
+		}
 		return result;
 	}
 	
@@ -293,3 +198,151 @@ public class HeroActorState_CatchPoint : IActorState{
 		actor.OnEnterCatchPoint();
 	}
 }
+
+public class HeroActorState_Attack : IActorState{
+	public HeroActorState_Attack(IActor actor){
+		this.actor = actor;
+	}
+	
+	public override IActorState toNextState (EActorAction action)
+	{
+		IActorState result = null;
+		if(action == EActorAction.HERO_IDLE){
+			result = new HeroActorState_Idle(actor);
+		}
+		return result;
+	}
+	
+	public override void OnEnter ()
+	{
+		actor.OnEnterAttack();
+	}
+	
+	public override void DoUpdata ()
+	{
+		actor.DoUpdataAttack();
+	}
+}
+
+	
+#endregion
+	
+	#region NPC FSM
+public class NPCActorState_Idle : IActorState{
+	public NPCActorState_Idle(IActor actor){
+		this.actor = actor;
+	}
+	
+	public override IActorState toNextState (EActorAction action)
+	{
+		IActorState result = null;
+		if(action == EActorAction.NPC_WALK){
+			result = new NPCActorState_Walk(actor);
+		}
+		else if(action == EActorAction.NPC_DIE){
+			result = new NPCActorState_Die(actor);
+		}
+		else if(action == EActorAction.NPC_WARN){
+			result = new NPCActorState_Warn(actor);
+		}
+		return result;
+	}
+	
+	public override void OnEnter ()
+	{
+		actor.OnEnterNPCIdle();
+	}
+	
+	public override void DoUpdata ()
+	{
+		actor.DoUpdataNPCIdle();
+	}
+	
+	
+}
+
+public class NPCActorState_Walk : IActorState{
+	public NPCActorState_Walk(IActor actor){
+		this.actor = actor;
+	}
+	
+	public override IActorState toNextState (EActorAction action)
+	{
+		IActorState result = null;
+		if(action == EActorAction.NPC_IDLE){
+			result = new NPCActorState_Idle(actor);
+		}
+		else if(action == EActorAction.NPC_DIE){
+			result = new NPCActorState_Die(actor);
+		}
+		else if(action == EActorAction.NPC_WARN){
+			result = new NPCActorState_Warn(actor);
+		}
+		return result;
+	}
+	
+	public override void OnEnter ()
+	{
+		actor.OnEnterWalk();
+	}
+	
+	public override void DoUpdata ()
+	{
+		actor.DoUpdataNPCWalk();
+	}
+}
+
+public class NPCActorState_Warn : IActorState{
+	public NPCActorState_Warn(IActor actor){
+		this.actor = actor;
+	}
+	
+	public override IActorState toNextState (EActorAction action)
+	{
+		IActorState result = null;
+		if(action == EActorAction.NPC_IDLE){
+			result = new NPCActorState_Idle(actor);
+		}
+		else if(action == EActorAction.NPC_WALK){
+			result = new NPCActorState_Walk(actor);
+		}
+		else if(action == EActorAction.NPC_DIE){
+			result = new NPCActorState_Die(actor);
+		}
+		return result;
+	}
+	
+	public override void OnEnter ()
+	{
+		actor.OnEnterWarn();
+	}
+	
+	public override void DoUpdata ()
+	{
+		actor.DoUpdataWarn();
+	}
+
+}
+
+public class NPCActorState_Die : IActorState{
+	public NPCActorState_Die(IActor actor){
+		this.actor = actor;
+	}
+	
+	public override IActorState toNextState (EActorAction action)
+	{
+		IActorState result = null;
+		return result;
+	}
+	
+	public override void OnEnter ()
+	{
+		actor.OnEnterDie();
+	}
+	
+	public override void DoUpdata ()
+	{
+		actor.DoUpdataDie();
+	}
+}
+	#endregion

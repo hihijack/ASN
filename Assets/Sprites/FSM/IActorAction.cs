@@ -2,9 +2,9 @@ using System.Collections;
 using UnityEngine;
 
 public class IActorAction{
-	public EFSMAction actiontype;
+	public EActorAction actiontype;
 	public IActorAction(){}
-	public IActorAction(EFSMAction actiontype){
+	public IActorAction(EActorAction actiontype){
 		this.actiontype = actiontype;
 	}
 }
